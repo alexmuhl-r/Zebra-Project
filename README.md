@@ -6,6 +6,8 @@ This repository includes code and data from our zebra stripe salience project. Y
 
 The first part of this project involves human and computational model estimates of salience in response to images of zebra. These images included four stripe patterns from Grevy's, mountain, plains zebra with shadow stripes and plains zebra without shadow stripes. These images were adjusted to simulate motion, distance and predator vision (colour and acuity). Human salience estimates were gathered online using the Gorilla Experiment Builder: https://app.gorilla.sc/openmaterials/207836. Model estimates were computed using Matlab (details in the preprint).
 
+Stimuli for this part of the project are included in the 'Stimuli' folder, these are organised according to image size (128, 165, 256, 512), simulated acuity (AC_LOW, AC_MED, AC), pattern (G, M, N, S), facing direction (L, R) and simulated motion (B).
+
 ## Lion-Zebra Pursuit Simulations
 
 The second part of this project involves simulations of predator-prey pursuit, included in a Matlab script.
