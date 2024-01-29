@@ -1,6 +1,6 @@
 clear
-%% Parameters
-%% Zebra parameters
+%% parameters
+%% zebra parameters
 zebraStart_x=0;         % Centre of zebra in x at start
 zebraStart_y=0;         % Centre of zebra in y at start (Zebra has no width)
 zebraLength=2.42;       % Length of zebra
@@ -13,7 +13,7 @@ zebraBack_x=zebraStart_x-zebraLength/2;
 zebraFront_y=zebraStart_y;
 zebraFront_x=zebraStart_x+zebraLength/2;
 
-%% Lion Parameters
+%% lion Parameters
 lion_start_speed=14;    % Lion max speed (m/s)
 lion_acc=9.5;           % Lion acceleration (m/s^2)
 lionStart_x=0;          % Lion start coord x
@@ -26,10 +26,11 @@ num_increments_speed=7; % number of increments of speed increase (predator)
 num_increments_dist=10; % number of increments of distance increase (start position of predator in y)
 distance_increment=5;   % distance increment (m)
 speed_increment=1;      % speed increment (m/s)
-timeout=0;              % set timeout to 0 
+timeout=0;              % set timeout to 0
 i=1;                    % set iteration to 1
-%% Simulate
-% run aiming at front and aiming at back
+
+%% simulate
+% run aiming at front and aiming at back, aim 1 = front, aim 2 = back
 for aim=1:2
     for a=1:num_increments_dist                                             % run series of start distances
         for b=1:num_increments_speed                                        % run series of lion speeds
@@ -49,10 +50,10 @@ for aim=1:2
                     elseif aim==2
                         lion_pos_backaim(i,1:2)=[lionStart_x,lionStart_y];
                     end
-                    
+
                     zebraSpeed(i)=0;
                     lionSpeed(i)=0;
-                    
+
                 else
                     % determine prey speeds (based on acceleration)
                     zebraSpeed(i)=zebraSpeed(i-1)+(zebra_acc/(time_increment^2)); % accelerate zebra to max speed
@@ -64,7 +65,7 @@ for aim=1:2
                     zeb_pos_f(i,1:2)=[zeb_pos_f(i-1,1)+(zebraSpeed(i)),zeb_pos_f(i-1,2)]; % +(zebraSpeed(i)*cos(angle_z))
                     zeb_pos_b(i,1:2)=[zeb_pos_b(i-1,1)+(zebraSpeed(i)),zeb_pos_b(i-1,2)]; % +(zebraSpeed(i)*cos(angle_z))
                     zeb_pos_c(i,1:2)=[zeb_pos_c(i-1,1)+(zebraSpeed(i)),zeb_pos_c(i-1,2)]; % +(zebraSpeed(i)*cos(angle_z))
-                    
+
                     % aim 1 = front, aim 2 = back
                     if aim==1
                         % calculate predator heading angle (front sim)
@@ -83,13 +84,12 @@ for aim=1:2
                             angle1_b=angle1_b-pi;
                         end
                     end
-                    % determine predator speed (based on acceleration and
-                    % time)
+                    % determine predator speed (based on acceleration and time)
                     lionSpeed(i)=lionSpeed(i-1)+(lion_acc/(time_increment^2));
                     if lionSpeed(i)>lion_max_speed/time_increment
                         lionSpeed(i)=lion_max_speed/time_increment;
                     end
-                    
+
                     % update predator position
                     if aim==1
                         lion_pos_frontaim(i,1)=lion_pos_frontaim(i-1,1)+(lionSpeed(i)*sin(angle1_f));
@@ -99,25 +99,22 @@ for aim=1:2
                         lion_pos_backaim(i,1)=lion_pos_backaim(i-1,1)+(lionSpeed(i)*sin(angle1_b));
                         lion_pos_backaim(i,2)=lion_pos_backaim(i-1,2)+(lionSpeed(i)*cos(angle1_b));
                         angle2_f=rad2deg(angle1_b);
-                        
+
                     end
                 end
-                
+
                 % calculate Euclidean distance between predator and prey
                 if aim==1
                     distance_frontaim(i,a,b)=pdist([zeb_pos_c(i,1) zeb_pos_c(i,2);lion_pos_frontaim(i,1) lion_pos_frontaim(i,2)],'Euclidean');
                 elseif aim==2
                     distance_backaim(i,a,b)=pdist([zeb_pos_c(i,1) zeb_pos_c(i,2);lion_pos_backaim(i,1) lion_pos_backaim(i,2)],'Euclidean');
                 end
-                
-                timer=i;    % timer function
-                
-                % to determine whether to time out or whether to continue
-                % based on x and y distance b/w lion and zebra
+
+                timer=i;    % timer function to determine whether to time out or whether to continue based on x and y distance b/w lion and zebra
                 if i>500 % over 500ms
                     if aim==1
                         if timer<cutoff*time_increment
-                            if zeb_pos_b(i,1)<=lion_pos_frontaim(i,1) && abs(zeb_pos_b(i,2)-lion_pos_frontaim(i,2))<1 % lion x>zebra x and lion y>zebra y zeb_pos_b(i,2)<=lion_pos_frontaim(i,2) && 
+                            if zeb_pos_b(i,1)<=lion_pos_frontaim(i,1) && abs(zeb_pos_b(i,2)-lion_pos_frontaim(i,2))<1 % lion x>zebra x and lion y>zebra y zeb_pos_b(i,2)<=lion_pos_frontaim(i,2) &&
                                 time(a,b,aim)=i;
                                 timeout=1;
                             end
@@ -127,7 +124,7 @@ for aim=1:2
                         end
                     elseif aim==2
                         if timer<cutoff*time_increment
-                            if zeb_pos_b(i,1)<=lion_pos_backaim(i,1) && abs(zeb_pos_b(i,2)-lion_pos_backaim(i,2))<1% lion x>zebra x and lion y>zebra y  && 
+                            if zeb_pos_b(i,1)<=lion_pos_backaim(i,1) && abs(zeb_pos_b(i,2)-lion_pos_backaim(i,2))<1% lion x>zebra x and lion y>zebra y  &&
                                 time(a,b,aim)=i;
                                 timeout=1;
                             end
@@ -138,14 +135,14 @@ for aim=1:2
                     end
                 end
                 i=i+1;
-                
-                
+
+
             end
         end
     end
 end
 
-%% PLOTTING
+%% plotting
 xax=lion_start_speed+[(1:num_increments_speed)-1].*speed_increment; %
 yax=lionStart_y_begin+[(1:num_increments_dist)-1].*distance_increment;
 
@@ -154,7 +151,7 @@ for a=1:num_increments_dist
     for b=1:num_increments_speed
         time_front(a,b)=time(a,b,1)/1000;
         distance_front(a,b)=time(a,b,1);
-        
+
         r=find(distance_backaim(:,a,b)==0);
         if isempty(r)
             distance_back(a,b)=nan;                                     %distance_backaim(end,a,b);
@@ -164,6 +161,7 @@ for a=1:num_increments_dist
         time_back(a,b)=time(a,b,2)/1000;
     end
 end
+
 %% front/back heatmaps
 figure(1)
 subplot(1,4,2); hold on
@@ -175,7 +173,7 @@ colorbar
 xlabel('Predator Max Speed (m/s)','FontSize',12)
 ylabel('Starting Distance (m)','FontSize',12)
 title('Time-to-capture (s): Front Aim','Fontsize',13)
-xlim([13.5 20.5]); 
+xlim([13.5 20.5]);
 ylim([7.5 57.5]);
 hold off
 subplot(1,4,3); hold on
@@ -187,7 +185,7 @@ colorbar
 xlabel('Predator Max Speed (m/s)','FontSize',12)
 ylabel('Starting Distance (m)','FontSize',12)
 title('Time-to-capture (s): Rear Aim','FontSize',13)
-xlim([13.5 20.5]); 
+xlim([13.5 20.5]);
 ylim([7.5 57.5]);
 hold off
 
@@ -200,6 +198,7 @@ for r=1:num_increments_dist
         end
     end
 end
+
 % [m,i]=maxk(d3(:),2);
 % d3(i(1))=m(2);
 d3=reshape(d3,[10 7]);
@@ -213,6 +212,6 @@ colorbar
 xlabel('Predator Max Speed (m/s)','FontSize',12)
 ylabel('Starting Distance (m)','FontSize',12)
 title('Difference in Time-to-capture (s)','FontSize',13)
-xlim([13.5 20.5]); 
+xlim([13.5 20.5]);
 ylim([7.5 57.5]);
 hold off
