@@ -1,6 +1,6 @@
 # Zebra Stripe Salience Project
 
-This repository includes code and data from our zebra stripe salience project. You can read about this project in our preprint available here: https://www.biorxiv.org/content/10.1101/2021.04.16.440148v1. Watch the illustrative video for an intuitive example of how rump stripes retain high visual salience while in motion and for lion/hyaena vision.
+This repository includes code and data from our zebra stripe salience project. You can read about this project in our paper available here: https://journals.sagepub.com/doi/10.1177/03010066251389508. Watch the illustrative video for an intuitive example of how rump stripes retain high visual salience while in motion and for lion/hyaena vision.
 
 ## Human and Computational Model Salience Estimates
 
